@@ -112,7 +112,6 @@ const generateWaifuReply = async (msg) => {
       }
     })
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": waifuAiKey,
@@ -147,7 +146,7 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
 </script>
 <template>
   <div class="h-dvh overflow-none">
-    <Toaster />
+    <Toaster position="top" />
     <!-- Main App -->
     <ScrollArea class="bg-zinc-950 flex-col overflow-none flex justify-center item-center">
       <div v-html="iframeCode" class="sticky h-[40px]  top-0 z-10 bg-black"></div>
