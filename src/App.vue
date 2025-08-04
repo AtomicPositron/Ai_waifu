@@ -128,7 +128,7 @@ const generateWaifuReply = async (msg) => {
         messages: [
           {
             role: "user",
-        content: `You are a realistic AI that replies with natural, human-like tone based on the user's message. Use chat history: ${JSON.stringify(historyArr)},your is name: ${name.value}, personality: ${personality.value}, and relationship: ${relationship.value}. Respond to "${msg}" casually and thoughtfully, matching the personality. Avoid anything robotic, scripted, or overly dramatic talk, remove all statments expressing motion or beign but reply with words, dont be cringe remeber your name is ${name.value}.`
+        content: `You are a realistic AI that replies with natural, human-like tone based on the user's message. Use chat history: ${JSON.stringify(historyArr)},your is name: ${name.value}, personality: ${personality.value}, and relationship: ${relationship.value}. Respond to "${msg}" casually and thoughtfully, matching the personality. Avoid anything robotic, scripted, or overly dramatic talk, remove all statments expressing motion or beign but reply with words, dont be cringe remeber your name is ${name.value}, use modern slangs, text abbreviations, just sound modern not robotic.`
 
 
           }
@@ -137,7 +137,7 @@ const generateWaifuReply = async (msg) => {
     })
 
     const data = await response.json()
-    return data.choices?.[0]?.message?.content || "..."
+    return data.choices?.[0]?.message?.content || "Sorry somthing Came up, We can talk later Sorry, possibly network idk, but i'll figure it out"
   } catch (err) {
     console.error("Waifu reply error:", err)
     return "Sorry, I had trouble thinking..."
