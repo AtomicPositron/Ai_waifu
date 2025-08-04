@@ -245,12 +245,12 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
           
 
           <ScrollArea class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
-            <md v-for="(msg, index) in chatHistory" :key="index" :class="[
+            <markdown v-for="(msg, index) in chatHistory" :key="index" :class="[
               'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-800 w-full p-3 mb-4 rounded-sm',
               msg.from === 'user' ? 'text-right bg-transparent' : 'text-left bg-zinc-900'
             ]">
               {{ msg.message }}
-          </md>
+          </markdown>
           </ScrollArea>
 
           <div class="textarea w-full bg-zinc-950  flex sticky bottom-0 flex-col sm:flex-row gap-2 mt-4">
