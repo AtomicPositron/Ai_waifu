@@ -54,7 +54,15 @@ const retrivalHistory = () => {
 }
 
 const createWaifu = () => {
-  waifu_info.value = {
+  alert(name.value)
+  if (name.value == ""){
+     toast('Invalid Credentials', {
+      variant: "destructive",
+      description: 'Please Fill the name form',
+
+    })
+  }else{
+    waifu_info.value = {
     name: name.value,
     personality: personality.value,
     memory_type: memory.value,
@@ -68,7 +76,7 @@ const createWaifu = () => {
   modal_state.value = false
   retrivalHistory()
 }
-
+}
 const sendMessage = async () => {
   const trimmedMessage = userMessage.value.trim()
   if (!trimmedMessage || isSending.value) return
@@ -98,7 +106,6 @@ const sendMessage = async () => {
 }
 
 const generateWaifuReply = async (msg) => {
-  console.log(waifuAiKey)
   let historyArr = []
   if (memory.value === "Short-Term" || memory.value === "LongTerm") {
     historyArr = chatHistory.value
@@ -145,7 +152,7 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
 </script>
 <template>
   <div class="h-dvh overflow-none">
-    <Toaster position="top" />
+    <Toaster/>
     <!-- Main App -->
     <ScrollArea class="bg-zinc-950 flex-col overflow-none flex justify-center item-center">
       <div v-html="iframeCode" class="sticky h-[40px]  top-0 z-10 bg-black"></div>
@@ -231,19 +238,19 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
         modal_state ? 'blur-xl' : ''
       ]">
         <div class="leftSide p-4 flex flex-col justify-center items-center w-full lg:w-5/6 h-dvh">
-          <div class="heading pt-20 sticky top-0 flex space-between gap-10">
-            <h1 class="font-bold text-3xl sm:text-4xl">{{ name }}</h1>
-            <Button @click="endChat" class="bg-transparent text-white border-1 border-zinc-400 focus:bg-white focus:text-black  sm:w-fit px-6 py-3">End Chat</Button>
+          <div class="heading pt-20 w-full sticky top-0 flex flex-row place-content-between gap-10">
+            <h1 class="scroll-m-20 text-4xl  font-extrabold tracking-tight lg:text-5xl">{{ name }}</h1>
+            <Button @click="endChat" class="bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black  sm:w-fit px-6 py-3">End Chat</Button>
           </div>
           
 
           <ScrollArea class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
-            <div v-for="(msg, index) in chatHistory" :key="index" :class="[
-              'messageTo border border-zinc-800 w-full p-3 mb-4 rounded-sm',
+            <md v-for="(msg, index) in chatHistory" :key="index" :class="[
+              'messageTo leading-7 [&:not(:first-child)]:mt-6 border border-zinc-800 w-full p-3 mb-4 rounded-sm',
               msg.from === 'user' ? 'text-right bg-transparent' : 'text-left bg-zinc-900'
             ]">
               {{ msg.message }}
-            </div>
+          </md>
           </ScrollArea>
 
           <div class="textarea w-full bg-zinc-950  flex sticky bottom-0 flex-col sm:flex-row gap-2 mt-4">
