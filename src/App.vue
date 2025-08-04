@@ -95,6 +95,7 @@ const sendMessage = async () => {
 }
 
 const generateWaifuReply = async (msg) => {
+  console.log(waifuAiKey)
   let historyArr = []
   if (memory.value === "Short-Term" || memory.value === "LongTerm") {
     historyArr = chatHistory.value
