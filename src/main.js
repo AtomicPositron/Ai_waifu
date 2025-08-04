@@ -3,5 +3,6 @@ import App from './App.vue'
 import './index.css'
 import VueAutoscroll from '@codekraft-studio/vue-autoscroll'
 
-Vue.use(VueAutoscroll)
-createApp(App).mount('#app')
+const app = createApp(App)
+app.use(VueAutoscroll)
+app.mount('#app')
