@@ -152,6 +152,7 @@ const generateWaifuReply = async (msg) => {
 const endChat = () => {
   localStorage.removeItem("chatHistory")
   localStorage.removeItem("waifuInfo")
+  toast("Until our paths cross again... ❤️")
   location.reload()
 }
 const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key=98c51d7fabc7b2ba27cb43aee4cb62cd" width="100%" height="100" frameborder="0" scrolling="no"></iframe>'
