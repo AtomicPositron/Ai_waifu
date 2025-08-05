@@ -157,10 +157,14 @@ const endChat = () => {
        label: 'Buy me Garri',
           onClick: () => window.location.replace("https://pay.squadco.com/link/ULPAGQ"),
     },
- action:{
-       label: 'Never Mind',
+
+  })
+  toast("Until our paths cross again... ❤️", {
+     action:{
+       label: 'Click here to End Chat',
           onClick: () => location.reload(),
     }
+
   })
 
 }
