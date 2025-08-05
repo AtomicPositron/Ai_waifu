@@ -156,9 +156,13 @@ const endChat = () => {
     action:{
        label: 'Buy me Garri',
           onClick: () => window.location.replace("https://pay.squadco.com/link/ULPAGQ"),
+    },
+ action:{
+       label: 'Never Mind',
+          onClick: () => location.reload(),
     }
   })
-  location.reload()
+
 }
 const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key=98c51d7fabc7b2ba27cb43aee4cb62cd" width="100%" height="100" frameborder="0" scrolling="no"></iframe>'
 </script>
