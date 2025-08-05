@@ -154,7 +154,7 @@ const endChat = () => {
   localStorage.removeItem("waifuInfo")
   toast("Until our paths cross again... ❤️", {
     action:{
-       label: 'Undo',
+       label: 'Buy me Garri',
           onClick: () => window.location.replace("https://pay.squadco.com/link/ULPAGQ"),
     }
   })
