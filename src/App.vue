@@ -152,7 +152,7 @@ const generateWaifuReply = async (msg) => {
 const endChat = () => {
   localStorage.removeItem("chatHistory")
   localStorage.removeItem("waifuInfo")
-  toast("Until our paths cross again... ❤️", {
+  toast("Support The Dev", {
     action:{
        label: 'Buy me Garri',
           onClick: () => window.location.replace("https://pay.squadco.com/link/ULPAGQ"),
