@@ -23,6 +23,8 @@ let memory = ref('Ephemeral')
 let gender = ref("Male")
 let relationship = ref('Friend')
 let userMessage = ref("")
+let country = ref("Nigeria")
+let language = ref("English")
 let chatHistory = ref([])
 const waifuAiKey = import.meta.env.VITE_WAIFU_AI_KEY;
 let modal_state = ref(true)
@@ -37,7 +39,9 @@ onMounted(() => {
     personality.value = info.personality || "Soft"
     memory.value = info.memory_type || "Ephemeral"
     relationship.value = info.relationship_mode || "Friend"
-    gender.value = info.gender || "Male"
+    gender.value = info.gender || "Female"
+    language.value = info.language || "English"
+    country.value = info.country || "Nigeria"
     modal_state.value = false
   }
   retrivalHistory()
@@ -54,7 +58,6 @@ const retrivalHistory = () => {
 }
 
 const createWaifu = () => {
-  alert(name.value)
   if (name.value == ""){
      toast('Invalid Credentials', {
       variant: "destructive",
@@ -62,12 +65,15 @@ const createWaifu = () => {
 
     })
   }else{
+     setInterval(() => {}, 2000)
     waifu_info.value = {
     name: name.value,
     personality: personality.value,
     memory_type: memory.value,
     relationship_mode: relationship.value,
     gender: gender.value,
+    language: language.value,
+    country: country.value,
     adRemoval: "true",
     modalState: false
   }
@@ -128,7 +134,7 @@ const generateWaifuReply = async (msg) => {
         messages: [
           {
             role: "user",
-        content: `You are a realistic AI that replies with natural, human-like tone based on the user's message. Use chat history: ${JSON.stringify(historyArr)},your is name: ${name.value}, personality: ${personality.value}, and relationship: ${relationship.value}. Respond to "${msg}" casually and thoughtfully, matching the personality. Avoid anything robotic, scripted, or overly dramatic talk, remove all statments expressing motion or beign but reply with words, dont be cringe remeber your name is ${name.value}, use modern slangs, text abbreviations, just sound modern not robotic.`
+        content: `You are a realistic AI that replies with natural, human-like tone based on the user's message. Use chat history: ${JSON.stringify(historyArr)},your is name: ${name.value}, personality: ${personality.value}, and relationship: ${relationship.value}, your Country: ${country.value}, Your Language: ${language.value}, If it is english, let it be english for general use nothing to big and small, down  to earth english, if pidgin speak in that countryis version of english e.g nigerian pidgin and if native speak in the countries native language. Respond to "${msg}" casually and thoughtfully, matching the personality. Avoid anything robotic, scripted, or overly dramatic talk, remove all statments expressing motion or beign but reply with words, dont be cringe remeber your name is ${name.value}, use modern slangs, text abbreviations, just sound modern not robotic, BE SUBMISSIVE, but give attitude when needed.`
 
 
           }
@@ -166,8 +172,8 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
         <p class="text-white font-bold text-md text-left w-full">She Remembers Everything... Unless you clear her Cache</p>
 
         <div class="grid w-full items-center gap-4 mt-3">
-          <Label for="name" class="text-white font-thin">What do you want to call her?</Label>
-          <Input v-model="name" placeholder="Name" class="text-white border-zinc-900" />
+          <Label for="name" class="text-white font-thin">Type a name here</Label>
+          <Input v-model="name" placeholder="Surprise me, senpai!" class="text-white border-zinc-900" />
         </div>
 
         <div class="dropdowns gap-2 flex flex-wrap">
@@ -197,7 +203,38 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-
+<DropdownMenu>
+  <DropdownMenuTrigger class="text-white border border-zinc-900 rounded-sm p-3 w-full sm:w-fit">Country</DropdownMenuTrigger>
+  <DropdownMenuContent class="bg-zinc-950 text-white w-56">
+    <DropdownMenuLabel>Select Country</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuRadioGroup v-model="country">
+      <DropdownMenuRadioItem value="USA">United States</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="UK">United Kingdom</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Japan">Japan</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Germany">Germany</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="France">France</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Canada">Canada</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Australia">Australia</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Brazil">Brazil</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="India">India</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="China">China</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Nigeria">Nigeria</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>
+<DropdownMenu>
+  <DropdownMenuTrigger class="text-white border border-zinc-900 rounded-sm p-3 w-full sm:w-fit">Language</DropdownMenuTrigger>
+  <DropdownMenuContent class="bg-zinc-950 text-white w-56">
+    <DropdownMenuLabel>Select Language</DropdownMenuLabel>
+    <DropdownMenuSeparator />
+    <DropdownMenuRadioGroup v-model="language">
+      <DropdownMenuRadioItem value="English">English</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="Native">Native</DropdownMenuRadioItem>
+       <DropdownMenuRadioItem value="Pidgin">Pidgin</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  </DropdownMenuContent>
+</DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger class="text-white border border-zinc-900 rounded-sm p-3 w-full sm:w-fit">Relationship Mode</DropdownMenuTrigger>
             <DropdownMenuContent class="bg-zinc-950 text-white w-56">
@@ -244,7 +281,7 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
           </div>
           
 
-          <ScrollArea class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
+          <ScrollArea2 class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
             <markdown v-for="(msg, index) in chatHistory" :key="index" :class="[
               'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-800 w-full p-3 mb-4 rounded-sm',
               msg.from === 'user' ? 'text-right bg-transparent' : 'text-left bg-zinc-900'
