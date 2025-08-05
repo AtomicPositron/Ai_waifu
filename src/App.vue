@@ -258,8 +258,11 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
                 <DropdownMenuRadioItem value="Friend">Friend</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="Crush">Crush</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="Girlfriend">Girlfriend</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Bigsis/mentor">Bigsis / Mentor</DropdownMenuRadioItem>
+                 <DropdownMenuRadioItem value="BoyFriend">Boyfriend</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Situationship">Situationship</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="Bigsis/mentor">Bigsis / Mentor / BigBro</DropdownMenuRadioItem>
                 <DropdownMenuRadioItem value="SecretAdmirer">Secret Admirer</DropdownMenuRadioItem>
+                <DropdownMenuRadioItem value="Side Chick">side chick</DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
           </DropdownMenu>
