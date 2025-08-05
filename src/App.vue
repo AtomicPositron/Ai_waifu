@@ -281,7 +281,7 @@ const iframeCode = '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key
           </div>
           
 
-          <ScrollArea2 class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
+          <ScrollArea class="textwindow bg-transparent overflow-y-auto p-4 pt-8 h-[70vh] w-full" v-autoscroll.deep>
             <markdown v-for="(msg, index) in chatHistory" :key="index" :class="[
               'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-800 w-full p-3 mb-4 rounded-sm',
               msg.from === 'user' ? 'text-right bg-transparent' : 'text-left bg-zinc-900'
