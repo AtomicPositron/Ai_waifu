@@ -27,9 +27,8 @@ let country = ref('Nigeria')
 let language = ref('English')
 let chatHistory = ref([])
 const waifuAiKey = import.meta.env.VITE_WAIFU_AI_KEY
-// const waifuAiKey =
-//   'Bearer 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'
 let modal_state = ref(true)
+let call_state = ref(false)
 let waifu_info = ref({})
 let isSending = ref(false)
 
@@ -93,6 +92,7 @@ const sendMessage = async () => {
   chatHistory.value.push({
     message: trimmedMessage,
     from: 'You',
+    time: Date().split(' ')[4],
   })
   localStorage.setItem('chatHistory', JSON.stringify(chatHistory.value))
   userMessage.value = ''
@@ -101,6 +101,7 @@ const sendMessage = async () => {
   chatHistory.value.push({
     message: waifuReply,
     from: name.value,
+    time: Date().now.split(' ')[4],
   })
   localStorage.setItem('chatHistory', JSON.stringify(chatHistory.value))
 
@@ -168,14 +169,15 @@ const endChat = () => {
   })
 }
 
-// const call = () => {
-//   toast('Calling', {
-//     action: {
-//       label: 'Hang Up',
-//       onClick: () => console.log('Call Ended'),
-//     },
-//   })
-// }
+const call = () => {
+  toast('Calling', {
+    action: {
+      label: 'Hang Up',
+      onClick: () => console.log('Call Ended'),
+    },
+  })
+  call_state.value = true
+}
 
 const iframeCode =
   '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key=98c51d7fabc7b2ba27cb43aee4cb62cd" width="100%" height="100" frameborder="0" scrolling="no"></iframe>'
@@ -188,11 +190,20 @@ const iframeCode =
       class="bg-[url('../public/blonde-black-crocodile.jpg')] bg-cover bg-no-repeat flex-col overflow-none flex justify-center item-center"
     >
       <div v-html="iframeCode" class="sticky h-[40px] top-0 z-10 bg-black"></div>
-
+      <!-- <div
+        :class="[
+          ' absolute z-50 bg-stone-950  backdrop-blur-3xl w-full h-dvh justify-center gap-5 items-center flex-col p-6',
+          call_state ? 'flex' : 'hidden',
+        ]"
+      >
+        <div class="bg-white rounded-xl h-70 justify-center flex p-20">callContainer</div>
+        <div class="bg-white rounded-xl p-5 mt-9">voiceContainer</div>
+        <div class="border-1 border-white p-5 w-fit rounded-xl">callControll</div>
+      </div> -->
       <!-- Setup Modal -->
       <div
         :class="[
-          ' absolute place-items-center z-50 bg-stone-900/90  backdrop-blur-3xl w-fill h-dvh justify-center gap-5 items-center flex-col p-6',
+          ' absolute place-items-center z-50 bg-stone-900/90  backdrop-blur-3xl w-dvw h-dvh justify-center gap-5 items-center flex-col p-6',
           modal_state ? 'flex' : 'hidden',
         ]"
       >
@@ -359,12 +370,12 @@ const iframeCode =
               :key="index"
               :class="[
                 'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-400 w-fit max-w-full p-3 mb-4 rounded-2xl',
-                msg.from === 'user'
+                msg.from === 'You'
                   ? 'text-right border-tl bg-transparent rounded-tr-none floar-right ml-auto'
                   : 'text-left bg-zinc-900 rounded-tl-none mr-auto',
               ]"
             >
-              <p class="text-gray-300 text-sm">{{ msg.from }} {{ Date().split(' ')[4] }}</p>
+              <p class="text-gray-300 text-sm">{{ msg.from }} {{ msg.time }}</p>
               {{ msg.message }}
             </markdown>
           </ScrollArea>
