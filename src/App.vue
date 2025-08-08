@@ -26,9 +26,9 @@ let userMessage = ref('')
 let country = ref('Nigeria')
 let language = ref('English')
 let chatHistory = ref([])
-// const waifuAiKey = import.meta.env.VITE_WAIFU_AI_KEY
-const waifuAiKey =
-  'Bearer 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'
+const waifuAiKey = import.meta.env.VITE_WAIFU_AI_KEY
+// const waifuAiKey =
+//   'Bearer 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'
 let modal_state = ref(true)
 let waifu_info = ref({})
 let isSending = ref(false)
@@ -66,7 +66,6 @@ const createWaifu = () => {
       description: 'Please Fill the name form',
     })
   } else {
-    setInterval(() => {}, 2000)
     waifu_info.value = {
       name: name.value,
       personality: personality.value,
