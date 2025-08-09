@@ -101,7 +101,7 @@ const sendMessage = async () => {
   chatHistory.value.push({
     message: waifuReply,
     from: name.value,
-    time: Date().now.split(' ')[4],
+    time: Date().split(' ')[4],
   })
   localStorage.setItem('chatHistory', JSON.stringify(chatHistory.value))
 
