@@ -346,7 +346,7 @@ const iframeCode =
         ]"
       >
         <div
-          class="leftSide pl-10 pr-10 p-4 flex bg-stone-900/80 backdrop-blur-[70px] flex-col justify-center items-center w-full md:w-3/4 h-dvh"
+          class="leftSide pl-10 pr-10 p-4 flex bg-stone-900/70 backdrop-blur-[70px] flex-col justify-center items-center w-full md:w-3/4 h-dvh"
         >
           <div class="heading pt-20 w-full sticky top-0 flex flex-row place-content-between gap-10">
             <Button
@@ -365,7 +365,7 @@ const iframeCode =
             class="textwindow scroll-smooth overflow-auto bg-transparent overflow-y-auto pt-8 h-[70vh] w-full"
             v-autoscroll.deep
           >
-            <markdown
+            <md
               v-for="(msg, index) in chatHistory"
               :key="index"
               :class="[
@@ -377,7 +377,7 @@ const iframeCode =
             >
               <p class="text-gray-300 text-sm">{{ msg.from }} {{ msg.time }}</p>
               {{ msg.message }}
-            </markdown>
+            </md>
           </ScrollArea>
 
           <div
