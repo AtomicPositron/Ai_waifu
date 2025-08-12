@@ -474,7 +474,7 @@ const iframeCode =
     <Toaster />
     <!-- Main App -->
     <ScrollArea
-      class="bg-[url('../public/blonde-black-crocodile.jpg')] bg-cover bg-no-repeat flex-col overflow-none flex justify-center item-center"
+      class="bg-[url('/blonde-black-crocodile.jpg')] bg-zinc-950 bg-cover bg-no-repeat flex-col overflow-none flex justify-center item-center"
     >
       <div v-html="iframeCode" class="sticky h-[40px] top-0 z-10 bg-black"></div>
       <!-- <div
