@@ -641,9 +641,9 @@ const speak = async (index) => {
           modal_state ? '' : '',
         ]"
       >
-        <div class="flex-1 justify-center p-7 place-items-center">
+        <div class="flex-1 xl:flex hidden justify-center p-7 place-items-center">
           <div
-            class="info w-full flex flex-col gap-10 h-full bg-zinc-950/90 p-5 pt-30 border-1 border-white rounded-sm"
+            class="info w-full justify-center flex flex-col gap-10 h-full bg-zinc-950/90 p-5 pt-10 border-1 border-white rounded-sm"
           >
             <h1 class="text-6xl font-bold capitalize">{{ name }}</h1>
             <div class="tabs flex-col gap-4 flex">
@@ -701,6 +701,42 @@ const speak = async (index) => {
         <div
           class="leftSide pl-10 pr-10 p-4 flex flex-3 flex-col justify-center items-center w-full md:w-3/4 h-dvh"
         >
+          <div class="xl:hidden flex flex-row w-full mt-10 place-content-between">
+            <Dialog>
+              <DialogTrigger
+                class="rounded bg-zinc-950 float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
+                >Sign Out</DialogTrigger
+              >
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Sign out</DialogTitle>
+                  <DialogDescription>
+                    You’re signed out. Don’t forget to come back soon!
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter> <button :click="signout">Sign Out</button> </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <Dialog>
+              <DialogTrigger
+                class="rounded bg-zinc-950 float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
+                >End Chat</DialogTrigger
+              >
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Close chat</DialogTitle>
+                  <DialogDescription> Chat ended… but i’ll be here missing you. </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter
+                  ><button @click="endchat">End Chat</button>
+                  <Separator orientation="vertical" />
+                  <button @click="support">Support Developer</button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
           <ScrollArea
             class="textwindow scroll-smooth overflow-auto bg-transparent overflow-y-auto pt-8 h-full w-full"
             v-autoscroll.deep
