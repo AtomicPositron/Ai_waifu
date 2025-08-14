@@ -10,6 +10,16 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
 import { toast } from 'vue-sonner'
 import { Toaster } from '@/components/ui/sonner'
 import 'vue-sonner/style.css'
@@ -29,7 +39,7 @@ let language = ref('English')
 let chatHistory = ref([])
 const waifuAiKey = import.meta.env.VITE_WAIFU_AI_KEY
 let modal_state = ref(true)
-let call_state = ref(false)
+let stream = ref(false)
 let waifu_info = ref({})
 let loading = ref(false)
 let isSending = ref(false)
@@ -377,7 +387,8 @@ const signout = () => {
   endChat()
 }
 
-const sendMessage = async () => {
+const sendMessage = async (e) => {
+  e.preventDefault()
   const trimmedMessage = userMessage.value.trim()
   if (!trimmedMessage || isSending.value) return
 
@@ -406,6 +417,7 @@ const sendMessage = async () => {
 }
 
 const generateWaifuReply = async (msg) => {
+  stream.value = true
   let historyArr = []
   if (memory.value === 'Short-Term' || memory.value === 'LongTerm') {
     historyArr = chatHistory.value
@@ -425,6 +437,7 @@ const generateWaifuReply = async (msg) => {
       },
     )
     let res = response['message']['content']
+    stream.value = false
     return res || "I'm having Network issues could you try again"
   } catch (err) {
     console.error('Waifu reply error:', err)
@@ -434,19 +447,10 @@ const generateWaifuReply = async (msg) => {
 const endChat = () => {
   localStorage.removeItem('chatHistory')
   localStorage.removeItem('waifuInfo')
-  toast('Until our paths cross again... ❤️', {
-    action: {
-      label: 'Click here to End Chat',
-      onClick: () => location.reload(),
-    },
-  })
-
-  toast('Support The Dev', {
-    action: {
-      label: 'Buy me Garri',
-      onClick: () => window.location.replace('https://pay.squadco.com/link/ULPAGQ'),
-    },
-  })
+  location.reload()
+}
+const support = () => {
+  window.location.replace('https://pay.squadco.com/link/ULPAGQ')
 }
 
 const speak = async (index) => {
@@ -465,237 +469,250 @@ const speak = async (index) => {
   console.log(audio)
   audio.play()
 }
-
-const iframeCode =
-  '<iframe src="https://www.profitableratecpm.com/ivpxsvzxt?key=98c51d7fabc7b2ba27cb43aee4cb62cd" width="100%" height="100" frameborder="0" scrolling="no"></iframe>'
 </script>
 <template>
   <div class="h-dvh overflow-none">
     <Toaster />
     <!-- Main App -->
     <ScrollArea
-      class="bg-[url('/blonde-black-crocodile.jpg')] bg-zinc-900 bg-cover bg-no-repeat flex-col overflow-none flex justify-center item-center"
+      class="bg-[url('/background.png')] bg-cover bg-zinc-900 flex-col overflow-none flex justify-center item-center"
     >
-      <div v-html="iframeCode" class="sticky h-[40px] top-0 z-10 bg-black"></div>
-      <!-- <div
-        :class="[
-          ' absolute z-50 bg-stone-950  backdrop-blur-3xl w-full h-dvh justify-center gap-5 items-center flex-col p-6',
-          call_state ? 'flex' : 'hidden',
-        ]"
-      >
-        <div class="bg-white rounded-xl h-70 justify-center flex p-20">callContainer</div>
-        <div class="bg-white rounded-xl p-5 mt-9">voiceContainer</div>
-        <div class="border-1 border-white p-5 w-fit rounded-xl">callControll</div>
-      </div> -->
       <!-- Setup Modal -->
       <div
+        class="bg-[url('/background.png')] transition-all bg-cover bg-no-repeat"
         :class="[
-          ' absolute place-items-center z-50 bg-stone-900/90  backdrop-blur-3xl w-dvw h-dvh justify-center gap-5 items-center flex-col p-6',
+          ' absolute place-items-center z-50 w-dvw h-dvh justify-center gap-5 items-center flex-col md:p-6 p-7',
           modal_state ? 'flex' : 'hidden',
         ]"
       >
-        <h1 class="text-gray-200 font-black text-left text-5xl w-full">Welcome to Emora</h1>
-        <p class="text-white font-bold text-md text-left w-full">
-          She Remembers Everything... Unless you clear her Cache
-        </p>
+        <div class="bg-white p-7 rounded-sm w-120 text-black">
+          <h1 class="font-black text-left text-5xl w-full mt-5 mb-10">Create A Companion</h1>
+          <div class="grid w-full items-center gap-4 mt-3">
+            <Input
+              v-model="name"
+              placeholder="Name"
+              class="border-black p-5 focus-visible:border-black border-2 focus-visible:ring-0"
+            />
+          </div>
 
-        <div class="grid w-full items-center gap-4 mt-3">
-          <Label for="name" class="text-white font-thin">Type a name here</Label>
-          <Input
-            v-model="name"
-            placeholder="Surprise me, senpai!"
-            class="text-white border-white focus-visible:ring-0"
-          />
+          <div class="dropdowns gap-2 mt-4 flex flex-wrap">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                class="text-black border-black border-2 rounded-sm p-3 w-full sm:w-fit"
+                >Personality Type</DropdownMenuTrigger
+              >
+              <DropdownMenuContent class="bg-white text-black border-black">
+                <DropdownMenuLabel>Personality</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup v-model="personality">
+                  <DropdownMenuRadioItem value="Soft">Soft</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Spicy">Spicy</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Tsundere">Tsundere</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Loyal">Loyal</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                class="text-black border-black border-2 rounded-sm p-3 w-full sm:w-fit"
+                >Country</DropdownMenuTrigger
+              >
+              <DropdownMenuContent class="bg-white text-black border-black">
+                <DropdownMenuLabel>Select Country</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup v-model="country">
+                  <DropdownMenuRadioItem value="United States">United States</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="United Kingdom"
+                    >United Kingdom</DropdownMenuRadioItem
+                  >
+                  <DropdownMenuRadioItem value="Japan">Japan</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="France">France</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Nigeria">Nigeria</DropdownMenuRadioItem>
+                  <!-- <DropdownMenuRadioItem value="Australia">Australia</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Brazil">Brazil</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="India">India</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="China">China</DropdownMenuRadioItem>
+
+                  <DropdownMenuRadioItem value="Austria">Austria</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Belgium">Belgium</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Czech Republic"
+                    >Czech Republic</DropdownMenuRadioItem
+                  > -->
+                  <!-- <DropdownMenuRadioItem value="Denmark">Denmark</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Finland">Finland</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Iceland">Iceland</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Ireland">Ireland</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Italy">Italy</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Mexico">Mexico</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Netherlands">Netherlands</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="New Zealand">New Zealand</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Norway">Norway</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Poland">Poland</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Portugal">Portugal</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Russia">Russia</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Singapore">Singapore</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="South Africa">South Africa</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="South Korea">South Korea</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Spain">Spain</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Sweden">Sweden</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Switzerland">Switzerland</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Turkey">Turkey</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="United Arab Emirates"
+                    >United Arab Emirates</DropdownMenuRadioItem
+                  > -->
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                class="text-black border-black border-2 rounded-sm p-3 w-full sm:w-fit"
+                >Locale</DropdownMenuTrigger
+              >
+              <DropdownMenuContent class="bg-white text-black border-black">
+                <DropdownMenuLabel>Select Language</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup v-model="language">
+                  <DropdownMenuRadioItem value="English">English</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Native">Native</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Pidgin">Pidgin</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                class="text-black border-black border-2 rounded-sm p-3 w-full sm:w-fit"
+                >Roleplay</DropdownMenuTrigger
+              >
+              <DropdownMenuContent class="bg-white text-black border-black">
+                <DropdownMenuLabel>Relationship</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup v-model="relationship">
+                  <!-- <DropdownMenuRadioItem value="Friend">Friend</DropdownMenuRadioItem> -->
+                  <DropdownMenuRadioItem value="Crush">Crush</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Girlfriend">Girlfriend</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="BoyFriend">Boyfriend</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Situationship">Situationship</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="Bigsis/mentor"
+                    >Bigsis / Mentor / BigBro</DropdownMenuRadioItem
+                  >
+                  <DropdownMenuRadioItem value="SecretAdmirer"
+                    >Secret Admirer</DropdownMenuRadioItem
+                  >
+                  <!-- <DropdownMenuRadioItem value="Side Chick">side chick</DropdownMenuRadioItem> -->
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                class="text-black border-black border-2 rounded-sm p-3 w-full sm:w-fit"
+                >Gender</DropdownMenuTrigger
+              >
+              <DropdownMenuContent class="bg-white text-black border-black">
+                <DropdownMenuLabel>Gender</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuRadioGroup v-model="gender">
+                  <DropdownMenuRadioItem value="male">Male</DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="female">Female</DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          <Button
+            @click="createWaifu"
+            :disabled="loading"
+            class="w-full bg-transparent border hover:bg-white transition-all border-black p-5 mt-5 text-black"
+          >
+            {{ loading ? '' : 'Create Your Dream For Free' }}
+            <DotLottieVue
+              :class="['transparent h-30 w-50', loading ? 'block' : 'hidden']"
+              autoplay
+              loop
+              src="https://lottie.host/01c71e64-c991-4ff4-b1b0-e9254bc38442/C6NTMhOJyP.lottie"
+            />
+          </Button>
         </div>
-
-        <div class="dropdowns gap-2 flex flex-wrap">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Personality Type</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Personality</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="personality">
-                <DropdownMenuRadioItem value="Soft">Soft</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Spicy">Spicy</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Tsundere">Tsundere</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Loyal">Loyal</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Memory Type</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Memory</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="memory">
-                <DropdownMenuRadioItem value="Ephemeral">Ephemeral</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Short-Term">Short-Term</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="LongTerm">LongTerm</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Country</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Select Country</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="country">
-                <DropdownMenuRadioItem value="United States">United States</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="United Kingdom">United Kingdom</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Japan">Japan</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Germany">Germany</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="France">France</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Canada">Canada</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Australia">Australia</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Brazil">Brazil</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="India">India</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="China">China</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Nigeria">Nigeria</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Austria">Austria</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Belgium">Belgium</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Czech Republic">Czech Republic</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Denmark">Denmark</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Finland">Finland</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Iceland">Iceland</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Ireland">Ireland</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Italy">Italy</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Mexico">Mexico</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Netherlands">Netherlands</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="New Zealand">New Zealand</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Norway">Norway</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Poland">Poland</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Portugal">Portugal</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Russia">Russia</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Singapore">Singapore</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="South Africa">South Africa</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="South Korea">South Korea</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Spain">Spain</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Sweden">Sweden</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Switzerland">Switzerland</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Turkey">Turkey</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="United Arab Emirates"
-                  >United Arab Emirates</DropdownMenuRadioItem
-                >
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Language</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Select Language</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="language">
-                <DropdownMenuRadioItem value="English">English</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Native">Native</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Pidgin">Pidgin</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Relationship Mode</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Relationship</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="relationship">
-                <DropdownMenuRadioItem value="Friend">Friend</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Crush">Crush</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Girlfriend">Girlfriend</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="BoyFriend">Boyfriend</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Situationship">Situationship</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Bigsis/mentor"
-                  >Bigsis / Mentor / BigBro</DropdownMenuRadioItem
-                >
-                <DropdownMenuRadioItem value="SecretAdmirer">Secret Admirer</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="Side Chick">side chick</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              class="text-white border border-white rounded-sm p-3 w-full sm:w-fit"
-              >Gender</DropdownMenuTrigger
-            >
-            <DropdownMenuContent class="bg-zinc-950 text-white w-56">
-              <DropdownMenuLabel>Gender</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup v-model="gender">
-                <DropdownMenuRadioItem value="male">Male</DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="female">Female</DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <Button
-          @click="createWaifu"
-          class="w-full bg-transparent border border-white p-8 focus:bg-white focus:text-black hover:bg-zinc-900"
-        >
-          Create Your Dream For Free
-          <DotLottieVue
-            :class="['transparent h-30 w-50', loading ? 'block' : 'hidden']"
-            autoplay
-            loop
-            src="https://lottie.host/01c71e64-c991-4ff4-b1b0-e9254bc38442/C6NTMhOJyP.lottie"
-          />
-        </Button>
       </div>
-
       <!-- Chat Area -->
       <div
         :class="[
-          'body   text-white flex relative overflow-none justify-center flex-row',
-          modal_state ? 'blur-xl' : '',
+          'body   text-white bg-stone-950/60 flex relative overflow-none justify-center flex-row',
+          modal_state ? '' : '',
         ]"
       >
-        <div
-          class="leftSide pl-10 pr-10 p-4 flex bg-stone-900/70 backdrop-blur-[70px] flex-col justify-center items-center w-full md:w-3/4 h-dvh"
-        >
-          <div class="heading pt-20 w-full sticky top-0 flex flex-row place-content-between gap-10">
-            <Button
-              @click="signout"
-              class="bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
-              >Sign Out</Button
-            >
-            <Button
-              @click="endChat"
-              class="bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
-              >End Chat</Button
-            >
-            <!-- <Button
-              @click="call"
-              class="bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
-              >Call</Button
-            > -->
-          </div>
+        <div class="flex-1 justify-center p-7 place-items-center">
+          <div
+            class="info w-full flex flex-col gap-10 h-full bg-zinc-950/90 p-5 pt-30 border-1 border-white rounded-sm"
+          >
+            <h1 class="text-6xl font-bold capitalize">{{ name }}</h1>
+            <div class="tabs flex-col gap-4 flex">
+              <span class="p-2 rounded block border-2 border-white"
+                >Personality - {{ personality }}</span
+              >
+              <span class="p-2 rounded block border-2 border-white"
+                >Relationship - {{ relationship }}</span
+              >
+              <span class="p-2 rounded block border-2 border-white">Gender - {{ gender }}</span>
+              <span class="p-2 rounded block border-2 border-white"
+                >Country - {{ country }} / {{ language }}</span
+              >
+            </div>
+            <div class="flex flex-row place-content-between">
+              <Dialog>
+                <DialogTrigger
+                  class="rounded bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
+                  >Sign Out</DialogTrigger
+                >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Sign out</DialogTitle>
+                    <DialogDescription>
+                      You’re signed out. Don’t forget to come back soon!
+                    </DialogDescription>
+                  </DialogHeader>
 
+                  <DialogFooter> <button :click="signout">Sign Out</button> </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger
+                  class="rounded bg-transparent float-right text-white border-1 border-zinc-400 focus:bg-white focus:text-black sm:w-fit px-6 py-3"
+                  >End Chat</DialogTrigger
+                >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Close chat</DialogTitle>
+                    <DialogDescription>
+                      Chat ended… but i’ll be here missing you.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <DialogFooter
+                    ><button @click="endchat">End Chat</button>
+                    <Separator orientation="vertical" />
+                    <button @click="support">Support Developer</button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        </div>
+        <div
+          class="leftSide pl-10 pr-10 p-4 flex flex-3 flex-col justify-center items-center w-full md:w-3/4 h-dvh"
+        >
           <ScrollArea
-            class="textwindow scroll-smooth overflow-auto bg-transparent overflow-y-auto pt-8 h-[70vh] w-full"
+            class="textwindow scroll-smooth overflow-auto bg-transparent overflow-y-auto pt-8 h-full w-full"
             v-autoscroll.deep
           >
             <md
               v-for="(msg, index) in chatHistory"
               :key="index"
               :class="[
-                'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-400 w-fit max-w-full p-3 mb-4 rounded-2xl',
+                'messageTo leading-7 block [&:not(:first-child)]:mt-6 border border-zinc-400 w-fit max-w-full md:max-w-120 p-3 mb-4 rounded-2xl',
                 msg.from === username
-                  ? 'text-right border-tl bg-transparent rounded-tr-none floar-right ml-auto'
-                  : 'text-left bg-zinc-900 rounded-tl-none mr-auto',
+                  ? 'text-right border-tl bg-zinc-950/90 rounded-tr-none floar-right ml-auto'
+                  : 'text-left bg-zinc-950 rounded-tl-none mr-auto',
               ]"
             >
               <p class="text-gray-300 text-sm">{{ msg.from }} {{ msg.time }}</p>
@@ -727,22 +744,24 @@ const iframeCode =
             </md>
           </ScrollArea>
 
-          <div
+          <form
             class="textarea place-items-center w-full flex sticky bottom-0 flex-col sm:flex-row gap-2 mt-4"
           >
-            <textarea
+            <input
+              aria-multiline="true"
               v-model="userMessage"
               placeholder="Say something..."
-              class="w-full p-3 rounded-xl border backdrop-blur-xl border-zinc-900 outline-none resize-none h-15 text-sm sm:text-base"
+              class="w-full p-3 rounded-xl border backdrop-blur-xl border-white outline-none resize-none h-15 text-sm sm:text-base"
             />
             <Button
+              type="submit"
               :disabled="isSending"
               class="bg-white text-black w-full hover:bg-transparent hover:border-zinc-800 border-1 hover:text-white focus:bg-white focus:text-black sm:w-fit px-6 py-3 disabled:opacity-50"
               @click="sendMessage"
             >
               {{ isSending ? 'Responding' : 'Send' }}
             </Button>
-          </div>
+          </form>
         </div>
       </div>
     </ScrollArea>
